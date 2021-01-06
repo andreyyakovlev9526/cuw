@@ -4,15 +4,21 @@ import MaterialTable from "material-table";
 import MaterialTableIcons from "../../page_parts/MaterialTableIcons";
 import {Alert} from "@material-ui/lab";
 import SongService from "../../../services/SongService";
+import makeStyles from "@material-ui/core/styles/makeStyles";
+
+const useStyles = makeStyles((theme) => ({
+
+}));
 
 const columns = [
     { field: 'title', title: 'Название' },
     { field: 'titleEn', title: 'Название(ENG)' },
-    // { field: 'sheets', title: 'Ноты' },
+    { field: 'sheets', title: 'Ноты' },
     // { field: 'samples', title: 'Запись' },
 ];
 
 export default function Songs() {
+    const classes = useStyles();
     const [data, setData, loading] = useFetch("http://localhost:3000/api/songs");
     const [errorMessages, setErrorMessages] = useState([]);
 
@@ -20,7 +26,7 @@ export default function Songs() {
         const errors = [];
         if (data.title === undefined) errors.push('Введите название песни');
         if (data.titleEn === undefined) errors.push('Введите название песни (ENG)');
-        // if (data.sheets === undefined) errors.push('Выберите PDF файл');
+        if (data.sheets === undefined) errors.push('Выберите PDF файл');
         // if (data.samples === undefined) errors.push('Выберите MP3 файл');
         return errors;
     };
