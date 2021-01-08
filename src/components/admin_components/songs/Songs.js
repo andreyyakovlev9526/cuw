@@ -5,16 +5,78 @@ import MaterialTableIcons from "../../page_parts/MaterialTableIcons";
 import {Alert} from "@material-ui/lab";
 import SongService from "../../../services/SongService";
 import makeStyles from "@material-ui/core/styles/makeStyles";
+import {TextField} from "@material-ui/core";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme) => ({}));
 
-}));
+const FileListInput = props => {
+    const onFileChange = async event => {
+        const data = new FormData();
+        data.append('asset', event.target.files[0], event.target.files[0].name);
+
+        const response = await fetch('http://localhost:3000/upload', {
+            method: 'POST',
+            body: data
+        });
+        const fileInfo = await response.json();
+        const url = 'http://localhost:3000/uploads/' + fileInfo.filename;
+
+        props.value.push({url, title: ''});
+        props.onChange(props.value);
+    };
+
+    return (
+        <div>
+            { props.value ? (
+                <table border={1}>
+                    <thead>
+                    <tr>
+                        <th>Файл</th>
+                        <th>Название</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    { props.value.map(item => (
+                        <tr key={item.url}>
+                            <td>{item.url}</td>
+                            <td><TextField label="Название" value={item.title} /*onChange={props.onChange(props.value)}*/ /></td>
+                        </tr>
+                    )) }
+                    </tbody>
+                </table>
+            ) : null}
+            Загрузить:
+            <input
+                type="file"
+                onChange={event => onFileChange(event)}
+            />
+        </div>
+    );
+};
 
 const columns = [
     { field: 'title', title: 'Название' },
     { field: 'titleEn', title: 'Название(ENG)' },
-    { field: 'sheets', title: 'Ноты' },
-    // { field: 'samples', title: 'Запись' },
+    {
+        field: 'sheets',
+        title: 'Ноты',
+        render: row => (
+            <div>
+                {row.sheets.map(file => (
+                <div key={file.url}>
+                    <a href={file.url}>{file.title ?? 'Untitled'}</a>
+                </div>
+                ))}
+            </div>
+        ),
+        editComponent: FileListInput
+    },
+    {
+        field: 'samples',
+        title: 'MP3',
+        render: row => (<div>PDF List</div>),
+        editComponent: FileListInput
+    },
 ];
 
 export default function Songs() {
