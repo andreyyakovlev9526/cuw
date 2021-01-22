@@ -63,9 +63,9 @@ const columns = [
         render: row => (
             <div>
                 {row.sheets.map(file => (
-                <div key={file.url}>
-                    <a href={file.url}>{file.title ?? 'Untitled'}</a>
-                </div>
+                    <div key={file.url}>
+                        <a href={file.url}>{file.title ?? 'Untitled'}</a>
+                    </div>
                 ))}
             </div>
         ),

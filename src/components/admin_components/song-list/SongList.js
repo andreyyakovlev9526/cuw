@@ -1,13 +1,53 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useFetch} from "../../../hooks";
 import MaterialTable from "material-table";
 import MaterialTableIcons from "../../page_parts/MaterialTableIcons";
-import {Alert} from "@material-ui/lab";
 import SongListService from "../../../services/SongListService";
+import {Alert, Autocomplete} from "@material-ui/lab";
+import {TextField} from "@material-ui/core";
+
+const MemberSelect = props => {
+  const [loading, setLoading] = useState(true);
+  const [members, setMembers] = useState([]);
+
+  useEffect(() => {
+    fetch(`http://localhost:3000/api/members/`)
+      .then(response => response.json())
+      .then(data => {
+        setMembers(data);
+        setLoading(false);
+      })
+  }, []);
+
+  return (
+    <Autocomplete
+      options={members}
+      getOptionLabel={(option) => option.name}
+      getOptionSelected={(option, value) => option.name === value.name}
+      renderInput={params => <TextField {...params} label="Выберите участников" variant="outlined" />}
+      style={{ width: 240 }}
+      loading={loading}
+      multiple={true}
+      onChange={value => {
+        props.onChange(value ? value.map(v => v._id) : []);
+      }}
+    />
+  );
+}
 
 const columns = [
-  // { field: 'songs', title: 'Ноты' },
-  // { field: 'members', title: 'Запись' },
+  // {
+  //   field: 'songs',
+  //   title: 'Песни',
+  //   render: row => (<div> МП3 </div>),
+  //   editComponent: MemberSelect
+  // },
+  {
+    field: 'members',
+    title: 'Участники',
+    render: row => <div>{row.members}</div>,
+    editComponent: MemberSelect
+  },
   { field: 'date', title: 'Дата' },
   { field: 'note', title: 'Заметки' },
 ];
@@ -19,7 +59,7 @@ export default function SongList() {
   const validate = data => {
     const errors = [];
     // if (data.songs === undefined) errors.push('Выберите песни');
-    // if (data.members === undefined) errors.push('Выберите участников');
+    if (data.members === undefined) errors.push('Выберите участников');
     if (data.date === undefined) errors.push('Выберите дату');
     return errors;
   };
@@ -35,7 +75,7 @@ export default function SongList() {
       </div>
       <div style={{ height: '300px', width: '100%' }}>
         <MaterialTable
-          title="Список песен"
+          title="Репертуар"
           loading={loading}
           data={data}
           columns={columns}
