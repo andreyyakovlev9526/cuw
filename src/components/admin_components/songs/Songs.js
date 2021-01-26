@@ -39,7 +39,7 @@ const FileListInput = props => {
                 { props.value.map(item => (
                   <tr key={item.url}>
                       <td>{item.url}</td>
-                      <td><TextField label="Название" value={item.title} /*onChange={props.onChange(props.value)}*/ /></td>
+                      <td><input label="Название" value={item.title} /*onChange={props.onChange(props.value)}*/ /></td> 
                   </tr>
                 )) }
                 </tbody>
@@ -71,12 +71,12 @@ const columns = [
         ),
         editComponent: FileListInput
     },
-    {
-        field: 'samples',
-        title: 'MP3',
-        render: row => (<div>PDF List</div>),
-        editComponent: FileListInput
-    },
+    // {
+    //     field: 'samples',
+    //     title: 'MP3',
+    //     render: row => (<div>PDF List</div>),
+    //     editComponent: FileListInput
+    // },
 ];
 
 export default function Songs() {

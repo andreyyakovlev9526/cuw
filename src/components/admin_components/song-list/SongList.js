@@ -28,9 +28,7 @@ const MemberSelect = props => {
       style={{ width: 240 }}
       loading={loading}
       multiple={true}
-      onChange={value => {
-        props.onChange(value ? value.map(v => v._id) : []);
-      }}
+      onChange={(_event, value) => props.onChange(value ? value.map(v => v._id) : [])}
     />
   );
 }
@@ -40,12 +38,12 @@ const columns = [
   //   field: 'songs',
   //   title: 'Песни',
   //   render: row => (<div> МП3 </div>),
-  //   editComponent: MemberSelect
+  //   editComponent: SongSelect
   // },
   {
     field: 'members',
     title: 'Участники',
-    render: row => <div>{row.members}</div>,
+    render: row => row.members.map(member => member.name).join(', '),
     editComponent: MemberSelect
   },
   { field: 'date', title: 'Дата' },
@@ -59,7 +57,7 @@ export default function SongList() {
   const validate = data => {
     const errors = [];
     // if (data.songs === undefined) errors.push('Выберите песни');
-    if (data.members === undefined) errors.push('Выберите участников');
+    // if (data.members === undefined) errors.push('Выберите участников');
     if (data.date === undefined) errors.push('Выберите дату');
     return errors;
   };
