@@ -25,6 +25,11 @@ const FileListInput = props => {
         props.onChange(props.value);
     };
 
+    const onTitleChange = (event, item) => {
+        item.title = event.currentTarget.value;
+        props.onChange(props.value);
+    };
+
     return (
         <div>
             { props.value ? (
@@ -39,7 +44,7 @@ const FileListInput = props => {
                     { props.value.map(item => (
                         <tr key={item.url}>
                             <td>{item.url}</td>
-                            <td><TextField label="Название" value={item.title} /*onChange={props.onChange(props.value)}*/ /></td>
+                            <td><TextField label="Название" value={item.title ? item.title : ''} onChange={(event) => onTitleChange(event, item)} /></td>
                         </tr>
                     )) }
                     </tbody>
