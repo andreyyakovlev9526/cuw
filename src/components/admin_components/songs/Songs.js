@@ -3,6 +3,7 @@ import Button from '@material-ui/core/Button';
 import {useFetch} from "../../../hooks";
 import MaterialTable from "material-table";
 import MaterialTableIcons from "../../page_parts/MaterialTableIcons";
+import DescriptionIcon from '@material-ui/icons/Description';
 import {Alert} from "@material-ui/lab";
 import SongService from "../../../services/SongService";
 import {TextField} from "@material-ui/core";
@@ -48,7 +49,9 @@ const FileListInput = props => {
                     <TableBody>
                     { props.value.map(item => (
                         <TableRow key={item.url}>
-                            <TableCell>{item.url}</TableCell>
+                            <TableCell>
+                                <a href={item.url}><DescriptionIcon /></a>
+                            </TableCell>
                             <TableCell>
                               <TextField 
                                 label="Название" 
