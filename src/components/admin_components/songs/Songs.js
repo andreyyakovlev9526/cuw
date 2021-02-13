@@ -1,13 +1,17 @@
 import React, {useState} from 'react';
+import Button from '@material-ui/core/Button';
 import {useFetch} from "../../../hooks";
 import MaterialTable from "material-table";
 import MaterialTableIcons from "../../page_parts/MaterialTableIcons";
 import {Alert} from "@material-ui/lab";
 import SongService from "../../../services/SongService";
-import makeStyles from "@material-ui/core/styles/makeStyles";
 import {TextField} from "@material-ui/core";
-
-const useStyles = makeStyles((theme) => ({}));
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
 
 const FileListInput = props => {
     const onFileChange = async event => {
@@ -33,28 +37,43 @@ const FileListInput = props => {
     return (
         <div>
             { props.value ? (
-                <table border={1}>
-                    <thead>
-                    <tr>
-                        <th>Файл</th>
-                        <th>Название</th>
-                    </tr>
-                    </thead>
-                    <tbody>
+              <TableContainer>
+                <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Файл</TableCell>
+                        <TableCell>Название</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
                     { props.value.map(item => (
-                        <tr key={item.url}>
-                            <td>{item.url}</td>
-                            <td><TextField label="Название" value={item.title ? item.title : ''} onChange={(event) => onTitleChange(event, item)} /></td>
-                        </tr>
+                        <TableRow key={item.url}>
+                            <TableCell>{item.url}</TableCell>
+                            <TableCell>
+                              <TextField 
+                                label="Название" 
+                                value={item.title ? item.title : ''} 
+                                onChange={(event) => onTitleChange(event, item)} 
+                              />
+                            </TableCell>
+                        </TableRow>
                     )) }
-                    </tbody>
-                </table>
+                    </TableBody>
+                </Table>
+                </TableContainer>
             ) : null}
-            Загрузить:
-            <input
-                type="file"
+            <div style={{marginTop: '3%'}}> 
+              <input style={{display: 'none', marginTop: '20px'}}
+                id="buttonFile"
                 onChange={event => onFileChange(event)}
-            />
+                type="file"
+              />
+              <label htmlFor="buttonFile">
+                <Button variant="contained" color="primary" component="span">
+                  Загрузить
+                </Button>
+              </label>
+            </div>
         </div>
     );
 };
@@ -79,13 +98,21 @@ const columns = [
     {
         field: 'samples',
         title: 'MP3',
-        render: row => (<div>PDF List</div>),
+        render: row => (
+          <div>
+              {row.samples.map(file => (
+                  <div key={file.url}>
+                      <a href={file.url}>{file.title ?? 'Untitled'}</a>
+                  </div>
+              ))}
+          </div>
+        ),
         editComponent: FileListInput
     },
 ];
 
 export default function Songs() {
-    const classes = useStyles();
+    
     const [data, setData, loading] = useFetch("http://localhost:3000/api/songs");
     const [errorMessages, setErrorMessages] = useState([]);
 
@@ -94,7 +121,7 @@ export default function Songs() {
         if (data.title === undefined) errors.push('Введите название песни');
         if (data.titleEn === undefined) errors.push('Введите название песни (ENG)');
         if (data.sheets === undefined) errors.push('Выберите PDF файл');
-        // if (data.samples === undefined) errors.push('Выберите MP3 файл');
+        if (data.samples === undefined) errors.push('Выберите MP3 файл');
         return errors;
     };
 
@@ -169,7 +196,7 @@ export default function Songs() {
                         paging: false,
                         actionsColumnIndex: -1,
                     }}
-                    localization={{ body: { editRow: { deleteText: 'Вы уверены, что хотите удалить эту запись?' } } }}
+                    localization={{ body: { editRow: { deleteText: 'Вы уверены, что хотите удалить эту запись?' } } }}  
                 />
             </div>
         </div>
