@@ -6,7 +6,6 @@ import Grid from '@material-ui/core/Grid';
 import '../../styles/App.css';
 import {Link} from "react-router-dom";
 import Paper from '@material-ui/core/Paper';
-import Header from "../page_parts/Header";
 
 const styles = theme => ({
 	paper: {
@@ -33,7 +32,6 @@ class Admin extends Component {
 		return (
 			<div>
 				<CssBaseline />
-				<Header />
 				<div className='main'>
 					<Grid container spacing={1}>
 						<Grid container item xs={12} spacing={3}>

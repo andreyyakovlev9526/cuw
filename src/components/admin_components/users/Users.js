@@ -4,6 +4,7 @@ import MaterialTable from "material-table";
 import MaterialTableIcons from "../../page_parts/MaterialTableIcons";
 import {Alert} from "@material-ui/lab";
 import UserService from "../../../services/UserService";
+import TitleWithBack from "../../page_parts/TitleWithBack";
 
 const columns = [
   { field: 'name', title: 'Имя' },
@@ -36,7 +37,7 @@ export default function Users() {
       </div>
       <div style={{ height: '300px', width: '100%' }}>
         <MaterialTable
-          title="Пользователи"
+          title={React.createElement(TitleWithBack, {title: 'Пользователи'})}
           loading={loading}
           data={data}
           columns={columns}

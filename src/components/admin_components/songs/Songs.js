@@ -13,6 +13,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import TitleWithBack from "../../page_parts/TitleWithBack";
 
 const FileListInput = props => {
     const onFileChange = async event => {
@@ -139,7 +140,7 @@ export default function Songs() {
             </div>
             <div style={{ height: '300px', width: '100%' }}>
                 <MaterialTable
-                    title="Песни"
+                    title={React.createElement(TitleWithBack, {title: 'Песни'})}
                     loading={loading}
                     data={data}
                     columns={columns}

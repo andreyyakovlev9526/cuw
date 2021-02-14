@@ -3,13 +3,10 @@ import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import '../../styles/App.css';
-import Header from "../page_parts/Header";
 
 const drawerWidth = 240;
 
-const styles = theme => ({
-
-});
+const styles = theme => ({});
 
 class Settings extends Component {
 
@@ -19,7 +16,6 @@ class Settings extends Component {
     return (
       <div>
         <CssBaseline />
-        <Header />
         <div className='main'>
           <h1>Settings</h1>
           <p>Settings page body content</p>

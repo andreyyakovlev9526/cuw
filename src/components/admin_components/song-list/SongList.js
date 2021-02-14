@@ -5,6 +5,8 @@ import MaterialTableIcons from "../../page_parts/MaterialTableIcons";
 import SongListService from "../../../services/SongListService";
 import {Alert, Autocomplete} from "@material-ui/lab";
 import {TextField} from "@material-ui/core";
+import TitleWithBack from "../../page_parts/TitleWithBack";
+import Grid from "@material-ui/core/Grid";
 
 const MemberSelect = props => {
   const [loading, setLoading] = useState(true);
@@ -28,7 +30,7 @@ const MemberSelect = props => {
       style={{ width: 240 }}
       loading={loading}
       multiple={true}
-      onChange={value => {
+      onChange={(event, value) => {
         props.onChange(value ? value.map(v => v._id) : []);
       }}
     />
@@ -73,9 +75,9 @@ export default function SongList() {
         </Alert>
         }
       </div>
-      <div style={{ height: '300px', width: '100%' }}>
+      <div style={{ height: '300px', width: '100%', minWidth: '620px', maxWidth: '1200px' }}>
         <MaterialTable
-          title="Репертуар"
+          title={React.createElement(TitleWithBack, {title: 'Репертуар'})}
           loading={loading}
           data={data}
           columns={columns}

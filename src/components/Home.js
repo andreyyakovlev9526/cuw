@@ -1,12 +1,10 @@
 import React, { Component } from "react";
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import clsx from 'clsx';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import '../styles/App.css';
 import "react-modern-calendar-datepicker/lib/DatePicker.css";
 import { Calendar } from "react-modern-calendar-datepicker";
-import Header from "./page_parts/Header";
 
 const styles = theme => ({
 
@@ -56,7 +54,6 @@ class Home extends Component {
     return (
       <div>
         <CssBaseline />
-        <Header />
         <div className='main'>
           {calendars()}
         </div>
