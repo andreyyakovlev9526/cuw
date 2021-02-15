@@ -6,7 +6,6 @@ import SongListService from "../../../services/SongListService";
 import {Alert, Autocomplete} from "@material-ui/lab";
 import {TextField} from "@material-ui/core";
 import TitleWithBack from "../../page_parts/TitleWithBack";
-import Grid from "@material-ui/core/Grid";
 
 const MemberSelect = props => {
   const [loading, setLoading] = useState(true);
@@ -37,20 +36,53 @@ const MemberSelect = props => {
   );
 }
 
+const SongSelect = props => {
+  const [loading, setLoading] = useState(true);
+  const [songs, setSongs] = useState([]);
+
+  useEffect(() => {
+    fetch(`http://localhost:3000/api/songs/`)
+      .then(response => response.json())
+      .then(data => {
+        setSongs(data);
+        setLoading(false);
+      })
+  }, []);
+
+  return (
+    <Autocomplete
+      options={songs}
+      getOptionLabel={(option) => option.title}
+      getOptionSelected={(option, value) => option.title === value.title}
+      renderInput={params => <TextField {...params} label="Выберите песни" variant="outlined" />}
+      style={{ width: 240 }}
+      loading={loading}
+      multiple={true}
+      onChange={(event, value) => {
+        props.onChange(value ? value.map(v => v._id) : []);
+      }}
+    />
+  );
+}
+
 const columns = [
-  // {
-  //   field: 'songs',
-  //   title: 'Песни',
-  //   render: row => (<div> МП3 </div>),
-  //   editComponent: SongSelect
-  // },
+  {
+    field: 'songs',
+    title: 'Песни',
+    render: row => row.songs.map(song => song.title).join(', '),
+    editComponent: SongSelect,
+  },
   {
     field: 'members',
     title: 'Участники',
     render: row => row.members.map(member => member.name).join(', '),
-    editComponent: MemberSelect
+    editComponent: MemberSelect,
   },
-  { field: 'date', title: 'Дата' },
+  { 
+    field: 'date', 
+    title: 'Дата',
+    type: 'date',
+  },
   { field: 'note', title: 'Заметки' },
 ];
 
@@ -60,8 +92,8 @@ export default function SongList() {
 
   const validate = data => {
     const errors = [];
-    // if (data.songs === undefined) errors.push('Выберите песни');
-    // if (data.members === undefined) errors.push('Выберите участников');
+    if (data.songs === undefined) errors.push('Выберите песни');
+    if (data.members === undefined) errors.push('Выберите участников');
     if (data.date === undefined) errors.push('Выберите дату');
     return errors;
   };
