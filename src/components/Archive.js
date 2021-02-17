@@ -1,105 +1,50 @@
-import React, { useEffect, useState } from "react";
-import { makeStyles} from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import Typography from '@material-ui/core/Typography';
+import React from 'react'
+import {useFetch} from "../hooks";
+import MaterialTable from "material-table";
+import TitleWithBack from "./page_parts/TitleWithBack";
 
-const useStyles = makeStyles((theme) => ({
-	title: {
-    margin: theme.spacing(4, 0, 2),
+const columns = [
+  { field: 'title', title: 'Название' },
+  { field: 'titleEn', title: 'Название(Eng)' },
+  {
+    field: 'sheets',
+    title: 'Ноты',
+    render: row => (
+      <div>
+        {row.sheets.map(file => (
+          <div key={file.url}>
+            <a href={file.url}>{file.title ?? 'Untitled'}</a>
+          </div>
+        ))}
+      </div>
+    ),
   },
-}));
+  {
+    field: 'samples',
+    title: 'MP3',
+    render: row => (
+      <div>
+          {row.samples.map(file => (
+            <div key={file.url}>
+              <a href={file.url}>{file.title ?? 'Untitled'}</a>
+            </div>
+          ))}
+      </div>
+    ),
+  },
+];
 
-const Generate = element => {
-  return [0].map((value) =>
-    React.cloneElement(element, {
-      key: value,
-    }),
+export default function Archive() {
+  const [data, loading] = useFetch("http://localhost:3000/api/songs");
+
+  return (
+    <div style={{ height: '300px', width: '100%' }}>
+      <MaterialTable
+        title={React.createElement(TitleWithBack, {title: 'Архив'})}
+        loading={loading}
+        data={data}
+        columns={columns}
+      />
+    </div>
   );
 }
-
-const Archive = () => {
-	const classes = useStyles();
-	
-	const [error, setError] = useState(null);
-	const [isLoaded, setIsLoaded] = useState(false);
-	const [items, setItems] = useState([]);
-	const [dense, setDense] = React.useState(false);
-  const [secondary, setSecondary] = React.useState(false);
-
-	useEffect(() => {
-		fetch('http://localhost:3000/api/songs')
-		 .then(res => res.json())
-		 .then(
-			 (result) => {
-				 setIsLoaded(true);
-				 setItems(result);
-			 },
-			 (error) => {
-				 setIsLoaded(true);
-				 setError(error);
-			 }
-		 );
-	}, [])
-
-	if (error) {
-		return <div> Ошибка: {error.message} </div>
-	} else if (!isLoaded) {
-		return <div> Загрузка... </div>
-	} else {
-		return (
-			<Grid container spacing={2}>
-  <Grid item xs={12} md={6}>
-		<Typography variant="h6" className={classes.title}>
-      Архив песен
-    </Typography>
-    <div className={classes.demo}>
-		{items.map(item => (
-      <List dense={dense}>
-        {Generate(
-        	<ListItem>
-            <ListItemText
-							primary={item.title}
-              secondary={item.titleEn}
-            />
-          </ListItem>,
-        )}
-      </List>
-			))}
-    </div>
-   </Grid>
-</Grid>
-			// <ul>
-			// 	{items.map(item => (
-			// 		<li key={item.title}>
-			// 			{item.title}
-			// 		</li>
-			// 	))}
-			// </ul>
-	);
-	}
-}
-
-export default Archive;
-
-{/* <Grid container spacing={2}>
-  <Grid item xs={12} md={6}>
-		<Typography variant="h6" className={classes.title}>
-      Архив песен
-    </Typography>
-    <div className={classes.demo}>
-      <List dense={dense}>
-        {generate(
-        	<ListItem>
-            <ListItemText
-							primary="Single-line item"
-              secondary={secondary ? 'Secondary text' : null}
-            />
-          </ListItem>,
-        )}
-      </List>
-    </div>
-   </Grid>
-</Grid> */}
