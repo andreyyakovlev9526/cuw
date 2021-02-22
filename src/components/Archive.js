@@ -2,10 +2,17 @@ import React from 'react'
 import {useFetch} from "../hooks";
 import MaterialTable from "material-table";
 import TitleWithBack from "./page_parts/TitleWithBack";
+import ListItemText from '@material-ui/core/ListItemText';
 
 const columns = [
-  { field: 'title', title: 'Название' },
-  { field: 'titleEn', title: 'Название(Eng)' },
+  { field: 'title', 
+    title: 'Название',
+    render: row => (
+      <ListItemText secondary={row.titleEn}>
+        {row.title}
+      </ListItemText>), 
+  },
+  // { field: 'titleEn', title: 'Название(Eng)' },
   {
     field: 'sheets',
     title: 'Ноты',

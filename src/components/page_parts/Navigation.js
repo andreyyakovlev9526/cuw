@@ -8,7 +8,7 @@ function Navigation() {
 		<div className='nav'>
 
 			<NavLink to='/' className='navItem' > Главная </NavLink>
-			<NavLink to='/song-list' className='navItem' > Репертуар </NavLink>
+			{/* <NavLink to='/song-list' className='navItem' > Репертуар </NavLink> */}
 			<NavLink to='/archive' className='navItem'> Архив </NavLink>
 			<NavLink to='/admin' className='navItem'> Админ </NavLink>
 
