@@ -3,7 +3,6 @@ import React from 'react';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-import { Link } from "react-router-dom";
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Divider from '@material-ui/core/Divider';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -23,6 +22,9 @@ import MusicNoteIcon from '@material-ui/icons/MusicNote';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import PeopleIcon from '@material-ui/icons/People';
 import ListSubheader from '@material-ui/core/ListSubheader';
+
+import { Link as RouterLink } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 const drawerWidth = 240;
 
@@ -51,13 +53,37 @@ const useStyles = makeStyles((theme) => ({
     width: drawerWidth,
   },
   nested: {
-    paddingLeft: theme.spacing(4),
+    paddingLeft: theme.spacing(2),
   },
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),
   },
 }));
+
+const ListItemLink = (props) => {
+  const { icon, primary, to } = props;
+
+  const renderLink = React.useMemo(
+    () => React.forwardRef((itemProps, ref) => <RouterLink to={to} ref={ref} {...itemProps} />),
+    [to],
+  );
+
+  return (
+    <li>
+      <ListItem button component={renderLink}>
+        {icon ? <ListItemIcon>{icon}</ListItemIcon> : null}
+        <ListItemText primary={primary} />
+      </ListItem>
+    </li>
+  );
+}
+
+ListItemLink.propTypes = {
+  icon: PropTypes.element,
+  primary: PropTypes.string.isRequired,
+  to: PropTypes.string.isRequired,
+};
 
 const ResponsiveDrawer = (props) => {
   const { window } = props;
@@ -73,14 +99,10 @@ const ResponsiveDrawer = (props) => {
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
-  
-  // const primaryDrawerNav = ['Репертуар', 'Архив',];
-  // const adminCategories = ['Репертуар', 'Песни', 'Участники', 'Пользователи',];
 
   const drawer = (
     <div>
       {/* <div className={classes.toolbar} /> */}
-        {/* <Divider /> */}
       <List
         subheader={
           <ListSubheader component="div">
@@ -89,23 +111,8 @@ const ResponsiveDrawer = (props) => {
         }
       >
         <Divider />
-        <ListItem button component={Link} to='/'>
-            <ListItemIcon>
-              <PlaylistPlayIcon />
-            </ListItemIcon>
-          <ListItemText primary="Репертуар" />
-        </ListItem>
-        <ListItem button component={Link} to='/archive'>
-            <ListItemIcon>
-              <LibraryMusicIcon />
-            </ListItemIcon>
-          <ListItemText primary="Архив" />
-        </ListItem>
-          {/* {primaryDrawerNav.map((text) => (
-            <ListItem button key={text}>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))} */}
+        <ListItemLink to='/' primary='Репертуар' icon={<PlaylistPlayIcon />} />
+        <ListItemLink to='/archive' primary='Архив' icon={<LibraryMusicIcon />} />
         <ListItem button onClick={handleClick} >
           <ListItemIcon>
             <SupervisorAccountIcon />
@@ -113,59 +120,13 @@ const ResponsiveDrawer = (props) => {
           <ListItemText primary="Админ" />
           {open ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
-
         <Divider />
         <Collapse in={!open} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
-            <ListItem 
-              button 
-              className={classes.nested} 
-              component={Link} 
-              to='/admin/song-list'
-            > 
-              <ListItemIcon>
-                <PlaylistAddIcon />
-              </ListItemIcon>
-              <ListItemText primary="Репертуар" />
-            </ListItem>
-            <ListItem 
-              button 
-              className={classes.nested}
-              component={Link} 
-              to='/admin/songs'
-            >
-              <ListItemIcon>
-                <MusicNoteIcon />
-              </ListItemIcon>
-              <ListItemText primary="Песни" />
-            </ListItem>
-            <ListItem 
-              button 
-              className={classes.nested}
-              component={Link} 
-              to='/admin/members'
-            >
-              <ListItemIcon>
-                <PeopleIcon />
-              </ListItemIcon>
-              <ListItemText primary="Участники" />
-            </ListItem>
-            <ListItem 
-              button 
-              className={classes.nested}
-              component={Link} 
-              to='/admin/users'
-            >
-              <ListItemIcon>
-                <AccountCircleIcon />
-              </ListItemIcon>
-              <ListItemText primary="Пользователи" />
-            </ListItem>
-              {/* {adminCategories.map((text, index) => (
-                <ListItem key={text} button className={classes.nested}>
-                  <ListItemText primary={text} />
-                </ListItem>
-              ))} */}
+          <List component="div" disablePadding className={classes.nested}>
+            <ListItemLink to='/admin/song-list' primary='Репертуар' icon={<PlaylistAddIcon />} />
+            <ListItemLink to='/admin/songs' primary='Песни' icon={<MusicNoteIcon />} />
+            <ListItemLink to='/admin/members' primary='Участники' icon={<PeopleIcon />} />
+            <ListItemLink to='/admin/users' primary='Пользователи' icon={<AccountCircleIcon />} />
           </List>
         </Collapse>
       </List>
