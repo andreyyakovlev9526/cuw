@@ -3,6 +3,7 @@ import React from 'react';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { Link } from "react-router-dom";
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Divider from '@material-ui/core/Divider';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -21,6 +22,7 @@ import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 import MusicNoteIcon from '@material-ui/icons/MusicNote';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import PeopleIcon from '@material-ui/icons/People';
+import ListSubheader from '@material-ui/core/ListSubheader';
 
 const drawerWidth = 240;
 
@@ -44,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   // necessary for content to be below app bar
-  toolbar: theme.mixins.toolbar,
+  // toolbar: theme.mixins.toolbar, 
   drawerPaper: {
     width: drawerWidth,
   },
@@ -77,18 +79,23 @@ const ResponsiveDrawer = (props) => {
 
   const drawer = (
     <div>
-      <div className={classes.toolbar} />
-      <Divider />
-      <List>
-
-        <ListItem>
+      {/* <div className={classes.toolbar} /> */}
+        {/* <Divider /> */}
+      <List
+        subheader={
+          <ListSubheader component="div">
+            Cherkassy Worship United
+          </ListSubheader>
+        }
+      >
+        <Divider />
+        <ListItem button component={Link} to='/'>
             <ListItemIcon>
               <PlaylistPlayIcon />
             </ListItemIcon>
           <ListItemText primary="Репертуар" />
         </ListItem>
-
-        <ListItem>
+        <ListItem button component={Link} to='/archive'>
             <ListItemIcon>
               <LibraryMusicIcon />
             </ListItemIcon>
@@ -99,7 +106,7 @@ const ResponsiveDrawer = (props) => {
               <ListItemText primary={text} />
             </ListItem>
           ))} */}
-        <ListItem button onClick={handleClick}>
+        <ListItem button onClick={handleClick} >
           <ListItemIcon>
             <SupervisorAccountIcon />
           </ListItemIcon>
@@ -110,29 +117,45 @@ const ResponsiveDrawer = (props) => {
         <Divider />
         <Collapse in={!open} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
-
-            <ListItem className={classes.nested}> 
+            <ListItem 
+              button 
+              className={classes.nested} 
+              component={Link} 
+              to='/admin/song-list'
+            > 
               <ListItemIcon>
                 <PlaylistAddIcon />
               </ListItemIcon>
               <ListItemText primary="Репертуар" />
             </ListItem>
-
-            <ListItem className={classes.nested}>
+            <ListItem 
+              button 
+              className={classes.nested}
+              component={Link} 
+              to='/admin/songs'
+            >
               <ListItemIcon>
                 <MusicNoteIcon />
               </ListItemIcon>
               <ListItemText primary="Песни" />
             </ListItem>
-
-            <ListItem className={classes.nested}>
+            <ListItem 
+              button 
+              className={classes.nested}
+              component={Link} 
+              to='/admin/members'
+            >
               <ListItemIcon>
                 <PeopleIcon />
               </ListItemIcon>
               <ListItemText primary="Участники" />
             </ListItem>
-
-            <ListItem className={classes.nested}>
+            <ListItem 
+              button 
+              className={classes.nested}
+              component={Link} 
+              to='/admin/users'
+            >
               <ListItemIcon>
                 <AccountCircleIcon />
               </ListItemIcon>
@@ -145,7 +168,6 @@ const ResponsiveDrawer = (props) => {
               ))} */}
           </List>
         </Collapse>
-
       </List>
     </div>
   );
@@ -164,7 +186,7 @@ const ResponsiveDrawer = (props) => {
       >
         <MenuIcon />
       </IconButton>
-      <nav className={classes.drawer} aria-label="mailbox folders">
+      <nav className={classes.drawer} aria-label="mainNav">
         {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
         <Hidden smUp implementation="css">
           <Drawer
