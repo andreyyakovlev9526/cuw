@@ -105,11 +105,12 @@ const ResponsiveDrawer = (props) => {
             Cherkassy Worship United
           </ListSubheader>
         }
+        onClick={handleDrawerToggle}
       >
         <Divider />
-        <ListItemLink onClick={handleDrawerToggle} to='/' primary='Репертуар' icon={<PlaylistPlayIcon />} />
-        <ListItemLink onClick={handleDrawerToggle} to='/archive' primary='Архив' icon={<LibraryMusicIcon />} />
-        <ListItem button onClick={handleClick} >
+        <ListItemLink to='/' primary='Репертуар' icon={<PlaylistPlayIcon />} />
+        <ListItemLink to='/archive' primary='Архив' icon={<LibraryMusicIcon />} />
+        <ListItem button onClick={handleClick}>
           <ListItemIcon>
             <SupervisorAccountIcon />
           </ListItemIcon>
