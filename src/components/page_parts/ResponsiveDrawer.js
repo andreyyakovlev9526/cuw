@@ -22,7 +22,6 @@ import MusicNoteIcon from '@material-ui/icons/MusicNote';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import PeopleIcon from '@material-ui/icons/People';
 import ListSubheader from '@material-ui/core/ListSubheader';
-
 import { Link as RouterLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
@@ -37,9 +36,6 @@ const useStyles = makeStyles((theme) => ({
       width: drawerWidth,
       flexShrink: 0,
     },
-  },
-  drawerClose: {
-    display: 'none',
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -62,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ListItemLink = (props) => {
-  const { icon, primary, to } = props;
+  const { icon, primary, to, onClick} = props;
 
   const renderLink = React.useMemo(
     () => React.forwardRef((itemProps, ref) => <RouterLink to={to} ref={ref} {...itemProps} />),
@@ -71,7 +67,7 @@ const ListItemLink = (props) => {
 
   return (
     <li>
-      <ListItem button component={renderLink}>
+      <ListItem button component={renderLink} onClick={onClick}>
         {icon ? <ListItemIcon>{icon}</ListItemIcon> : null}
         <ListItemText primary={primary} />
       </ListItem>
@@ -111,8 +107,8 @@ const ResponsiveDrawer = (props) => {
         }
       >
         <Divider />
-        <ListItemLink to='/' primary='Репертуар' icon={<PlaylistPlayIcon />} />
-        <ListItemLink to='/archive' primary='Архив' icon={<LibraryMusicIcon />} />
+        <ListItemLink onClick={handleDrawerToggle} to='/' primary='Репертуар' icon={<PlaylistPlayIcon />} />
+        <ListItemLink onClick={handleDrawerToggle} to='/archive' primary='Архив' icon={<LibraryMusicIcon />} />
         <ListItem button onClick={handleClick} >
           <ListItemIcon>
             <SupervisorAccountIcon />
@@ -162,14 +158,6 @@ const ResponsiveDrawer = (props) => {
             ModalProps={{
               keepMounted: true, // Better open performance on mobile.
             }}
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
-        <Hidden xsDown implementation="css">
-          <Drawer
-            className={classes.drawerClose}
-            variant='permanent'
           >
             {drawer}
           </Drawer>
