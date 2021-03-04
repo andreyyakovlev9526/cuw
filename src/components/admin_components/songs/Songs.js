@@ -66,11 +66,17 @@ const FileListInput = props => {
                 </Table>
                 </TableContainer>
             ) : null}
+            {/* Загрузить: */}
+            {/* <input
+                type="file"
+                onChange={event => onFileChange(event)}
+            /> */}
             <div style={{marginTop: '3%'}}> 
               <input style={{display: 'none', marginTop: '20px'}}
                 id="buttonFile"
                 onChange={event => onFileChange(event)}
                 type="file"
+                // accept=".pdf"
               />
               <label htmlFor="buttonFile">
                 <Button variant="contained" color="primary" component="span">
@@ -109,7 +115,7 @@ const columns = [
                       <a href={file.url}>{file.title ?? 'Untitled'}</a>
                   </div>
               ))}
-          </div>
+         </div>
         ),
         editComponent: FileListInput
     },
