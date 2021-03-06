@@ -43,13 +43,8 @@ const useStyles = makeStyles((theme) => ({
       display: 'none',
     },
   },
-  // necessary for content to be below app bar
-  // toolbar: theme.mixins.toolbar, 
   drawerPaper: {
     width: drawerWidth,
-  },
-  nested: {
-    paddingLeft: theme.spacing(2),
   },
   content: {
     flexGrow: 1,
@@ -67,7 +62,8 @@ const ListItemLink = (props) => {
 
   return (
     <li>
-      <ListItem button component={renderLink} onClick={onClick}>
+      {/*<ListItem button component={renderLink} onClick={onClick}>*/}
+      <ListItem button component={renderLink}>
         {icon ? <ListItemIcon>{icon}</ListItemIcon> : null}
         <ListItemText primary={primary} />
       </ListItem>
@@ -86,11 +82,6 @@ const ResponsiveDrawer = (props) => {
   const classes = useStyles();
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [open, setOpen] = React.useState(true);
-
-  const handleClick = () => {
-    setOpen(!open);
-  };
   
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -98,34 +89,27 @@ const ResponsiveDrawer = (props) => {
 
   const drawer = (
     <div>
-      {/* <div className={classes.toolbar} /> */}
-      <List
+      <div className={classes.toolbar} />
+      <List onClick={handleDrawerToggle}
         subheader={
           <ListSubheader component="div">
-            Cherkassy Worship United
+            Навигация
           </ListSubheader>
         }
-        onClick={handleDrawerToggle}
       >
         <Divider />
         <ListItemLink to='/' primary='Репертуар' icon={<PlaylistPlayIcon />} />
         <ListItemLink to='/archive' primary='Архив' icon={<LibraryMusicIcon />} />
-        <ListItem button onClick={handleClick}>
-          <ListItemIcon>
-            <SupervisorAccountIcon />
-          </ListItemIcon>
-          <ListItemText primary="Админ" />
-          {open ? <ExpandLess /> : <ExpandMore />}
-        </ListItem>
+        <ListSubheader component="div">
+          Админ
+        </ListSubheader>
         <Divider />
-        <Collapse in={!open} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding className={classes.nested}>
-            <ListItemLink to='/admin/song-list' primary='Репертуар' icon={<PlaylistAddIcon />} />
-            <ListItemLink to='/admin/songs' primary='Песни' icon={<MusicNoteIcon />} />
-            <ListItemLink to='/admin/members' primary='Участники' icon={<PeopleIcon />} />
-            <ListItemLink to='/admin/users' primary='Пользователи' icon={<AccountCircleIcon />} />
-          </List>
-        </Collapse>
+        <List component="div">
+          <ListItemLink to='/admin/song-list' primary='Репертуар' icon={<PlaylistAddIcon />} />
+          <ListItemLink to='/admin/songs' primary='Песни' icon={<MusicNoteIcon />} />
+          <ListItemLink to='/admin/members' primary='Участники' icon={<PeopleIcon />} />
+          <ListItemLink to='/admin/users' primary='Пользователи' icon={<AccountCircleIcon />} />
+        </List>
       </List>
     </div>
   );

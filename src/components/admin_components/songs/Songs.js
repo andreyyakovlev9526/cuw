@@ -27,14 +27,17 @@ const FileListInput = props => {
         const fileInfo = await response.json();
         const url = 'http://localhost:3000/uploads/' + fileInfo.filename;
 
-        props.value.push({url, title: ''});
-        props.onChange(props.value);
+        const newValue = props.value ?? [];
+        newValue.push({url, title: ''});
+        props.onChange(newValue);
     };
 
     const onTitleChange = (event, item) => {
         item.title = event.currentTarget.value;
         props.onChange(props.value);
     };
+
+    const inputId = 'file-list-' + Math.random().toString(36).substring(7);
 
     return (
         <div>
@@ -66,24 +69,31 @@ const FileListInput = props => {
                 </Table>
                 </TableContainer>
             ) : null}
-            {/* Загрузить: */}
-            {/* <input
+            <input
+                style={{ display: 'none' }}
+                id={inputId}
                 type="file"
                 onChange={event => onFileChange(event)}
-            /> */}
-            <div style={{marginTop: '3%'}}> 
-              <input style={{display: 'none', marginTop: '20px'}}
-                id="buttonFile"
-                onChange={event => onFileChange(event)}
-                type="file"
-                // accept=".pdf"
-              />
-              <label htmlFor="buttonFile">
-                <Button variant="contained" color="primary" component="span">
-                  Загрузить
+            />
+            <label htmlFor={inputId}>
+                <Button color="primary" component="span">
+                    Загрузить
                 </Button>
-              </label>
-            </div>
+            </label>
+
+            {/*<div style={{marginTop: '3%'}}> */}
+            {/*  <input style={{display: 'none', marginTop: '20px'}}*/}
+            {/*    id="buttonFile"*/}
+            {/*    onChange={event => onFileChange(event)}*/}
+            {/*    type="file"*/}
+            {/*    // accept=".pdf"*/}
+            {/*  />*/}
+            {/*  <label htmlFor="buttonFile">*/}
+            {/*    <Button variant="contained" color="primary" component="span">*/}
+            {/*      Загрузить*/}
+            {/*    </Button>*/}
+            {/*  </label>*/}
+            {/*</div>*/}
         </div>
     );
 };
@@ -96,7 +106,7 @@ const columns = [
         title: 'Ноты',
         render: row => (
             <div>
-                {row.sheets.map(file => (
+                {row.sheets && row.sheets.map(file => (
                     <div key={file.url}>
                         <a href={file.url}>{file.title ?? 'Untitled'}</a>
                     </div>
@@ -110,7 +120,7 @@ const columns = [
         title: 'MP3',
         render: row => (
           <div>
-              {row.samples.map(file => (
+              {row.samples && row.samples.map(file => (
                   <div key={file.url}>
                       <a href={file.url}>{file.title ?? 'Untitled'}</a>
                   </div>
@@ -129,9 +139,6 @@ export default function Songs() {
     const validate = data => {
         const errors = [];
         if (data.title === undefined) errors.push('Введите название песни');
-        if (data.titleEn === undefined) errors.push('Введите название песни (ENG)');
-        if (data.sheets === undefined) errors.push('Выберите PDF файл');
-        if (data.samples === undefined) errors.push('Выберите MP3 файл');
         return errors;
     };
 

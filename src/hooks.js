@@ -19,7 +19,7 @@ function useFetch(url) {
         setLoading(false);
     }
     useEffect(() => {
-        fetchUrl();
+        fetchUrl().then();
     }, []);
     return [data, setData, loading, setLoading];
 }

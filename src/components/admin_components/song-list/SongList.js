@@ -93,7 +93,6 @@ export default function SongList() {
   const validate = data => {
     const errors = [];
     if (data.songs === undefined) errors.push('Выберите песни');
-    if (data.members === undefined) errors.push('Выберите участников');
     if (data.date === undefined) errors.push('Выберите дату');
     return errors;
   };
@@ -119,10 +118,10 @@ export default function SongList() {
               const errors = validate(newData);
               if (!errors.length) {
                 setErrorMessages([]);
-                SongListService.update(oldData.id, newData).then(() => {
+                SongListService.update(oldData.id, newData).then(response => {
                   const dataUpdate = [...data];
                   const index = oldData.tableData.id;
-                  dataUpdate[index] = newData;
+                  dataUpdate[index] = response.data;
                   setData([...dataUpdate]);
                   resolve();
                 }).catch(() => {
@@ -138,9 +137,9 @@ export default function SongList() {
               const errors = validate(newData);
               if (!errors.length) {
                 setErrorMessages([]);
-                SongListService.create(newData).then(() => {
+                SongListService.create(newData).then(response => {
                   const dataToAdd = [...data];
-                  dataToAdd.push(newData);
+                  dataToAdd.push(response.data);
                   setData(dataToAdd);
                   resolve();
                 }).catch(() => {

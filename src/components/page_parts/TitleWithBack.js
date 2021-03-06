@@ -13,10 +13,10 @@ function TitleWithBack(props) {
     const classes = useStyles();
     return (
         <h1 className={classes.header}>
-            <Link to='/admin'>
-                <ArrowBackIcon />
-            </Link>
-            &nbsp;
+            {/*<Link to='/admin'>*/}
+            {/*    <ArrowBackIcon />*/}
+            {/*</Link>*/}
+            {/*&nbsp;*/}
             {props.title}
         </h1>
     );
