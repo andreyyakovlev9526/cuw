@@ -21,9 +21,10 @@ const FileListInput = props => {
         data.append('asset', event.target.files[0], event.target.files[0].name);
 
         const response = await fetch('http://localhost:3000/upload', {
-            method: 'POST',
-            body: data
+          method: 'POST',
+          body: data
         });
+        
         const fileInfo = await response.json();
         const url = 'http://localhost:3000/uploads/' + fileInfo.filename;
 
