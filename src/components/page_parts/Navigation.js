@@ -2,7 +2,6 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Hidden from '@material-ui/core/Hidden';
-import Button from '@material-ui/core/Button';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Grow from '@material-ui/core/Grow';
 import Paper from '@material-ui/core/Paper';
@@ -69,67 +68,42 @@ function Navigation() {
 	return (
 		<div>
 	  	<div className='nav'>
-			<div className={classes.navContainer}>
+				<div className={classes.navContainer}>
+					<Hidden xsDown>
+						<NavLink to='/' > Репертуар </NavLink>
+						<NavLink to='/archive'> Архив </NavLink>
+						<NavLink to={anchorRef} onClick={handleToggle} ref={anchorRef} aria-haspopup="true" 
+							aria-controls={open ? 'menu-list-grow' : undefined}
+						> 
+							Админ 
+						</NavLink>
+					</Hidden> 
+				</div>
+			</div> 
+			<div>
 				<Hidden xsDown>
-					<NavLink to='/' > Репертуар </NavLink>
-					<NavLink to='/archive'> Архив </NavLink>
-					<NavLink
-					 to={anchorRef} 
-					 ref={anchorRef}
-					 aria-controls={open ? 'menu-list-grow' : undefined}
-					 aria-haspopup="true"
-					 onClick={handleToggle}
-					> 
-					 	Админ 
-					</NavLink>
-				</Hidden> 
-		  </div>
-		</div> 
-		<div>
-		<Hidden xsDown>
-		{/* <Button
-			ref={anchorRef}
-			aria-controls={open ? 'menu-list-grow' : undefined}
-			aria-haspopup="true"
-			onClick={handleToggle}
-		>
-			Админ
-		</Button> */}
-		<Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
-			{({ TransitionProps, placement }) => (
-				<Grow
-					{...TransitionProps}
-					style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
-				>
-					<Paper>
-						<ClickAwayListener onClickAway={handleClose}>
-							<MenuList 
-								autoFocusItem={open} 
-								id="menu-list-grow" 
-								className={classes.adminDropMenu}
-								onKeyDown={handleListKeyDown} 
-							>
-									<MenuItem onClick={handleClose}>
-										<NavLink to='/admin/song-list'> Репертуар </NavLink>
-									</MenuItem>
-									<MenuItem onClick={handleClose}>
-										<NavLink to='/admin/songs'> Песни </NavLink>
-									</MenuItem>
-									<MenuItem onClick={handleClose}>
-										<NavLink to='/admin/members'> Участники </NavLink>
-									</MenuItem>
-									<MenuItem onClick={handleClose}>
-										<NavLink to='/admin/users'> Пользователи </NavLink>
-									</MenuItem>
-							</MenuList>
-						</ClickAwayListener>
-					</Paper>
-				</Grow>
-			)}
-		</Popper>
-		</Hidden>
-	</div>
-	</div>
+				<Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
+					{({ TransitionProps, placement }) => (
+						<Grow
+							{...TransitionProps}
+							style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
+						>
+							<Paper>
+								<ClickAwayListener onClickAway={handleClose}>
+									<MenuList autoFocusItem={open} id="menu-list-grow" className={classes.adminDropMenu} onKeyDown={handleListKeyDown} >
+											<MenuItem onClick={handleClose} component={NavLink} to='/admin/song-list'> Репертуар </MenuItem>
+											<MenuItem onClick={handleClose} component={NavLink} to='/admin/songs'> Песни </MenuItem>
+											<MenuItem onClick={handleClose} component={NavLink} to='/admin/members'> Участники </MenuItem>
+											<MenuItem onClick={handleClose} component={NavLink} to='/admin/users'> Пользователи </MenuItem>
+									</MenuList>
+								</ClickAwayListener>
+							</Paper>
+						</Grow>
+					)}
+				</Popper>
+				</Hidden>
+			</div>
+		</div>
 	);
 }
 

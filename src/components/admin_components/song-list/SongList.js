@@ -117,7 +117,7 @@ export default function SongList() {
             onRowUpdate: (newData, oldData) => new Promise(resolve => {
               const errors = validate(newData);
               if (!errors.length) {
-                setErrorMessages([]);
+                // setErrorMessages([]);
                 SongListService.update(oldData.id, newData).then(response => {
                   const dataUpdate = [...data];
                   const index = oldData.tableData.id;
@@ -125,7 +125,7 @@ export default function SongList() {
                   setData([...dataUpdate]);
                   resolve();
                 }).catch(() => {
-                  setErrorMessages(['Не удалось сохранить изменения. Обратитесь к администратору!']);
+                  setErrorMessages(['Не удалось сохранить изменения. Обратитесь к администратору!'])
                   resolve();
                 });
               } else {
@@ -136,7 +136,7 @@ export default function SongList() {
             onRowAdd: newData => new Promise(resolve => {
               const errors = validate(newData);
               if (!errors.length) {
-                setErrorMessages([]);
+                // setErrorMessages([]);
                 SongListService.create(newData).then(response => {
                   const dataToAdd = [...data];
                   dataToAdd.push(response.data);
