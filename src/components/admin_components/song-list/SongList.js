@@ -101,7 +101,7 @@ export default function SongList() {
     <div>
       <div>
         {errorMessages.length > 0 &&
-        <Alert severity="error">
+        <Alert severity="error" onClose={() => {}}>
           {errorMessages.map((msg, i) => <div key={i}>{msg}</div>)}
         </Alert>
         }
@@ -110,11 +110,11 @@ export default function SongList() {
         <MaterialTable
           title={React.createElement(TitleWithBack, {title: 'Репертуар'})}
           loading={loading}
-          data={data}
           columns={columns}
+          data={data}
           icons={MaterialTableIcons}
           editable={{
-            onRowUpdate: (newData, oldData) => new Promise(resolve => {
+            onRowUpdate: (newData, oldData) => new Promise((resolve, reject)=> {
               const errors = validate(newData);
               if (!errors.length) {
                 // setErrorMessages([]);
@@ -126,11 +126,11 @@ export default function SongList() {
                   resolve();
                 }).catch(() => {
                   setErrorMessages(['Не удалось сохранить изменения. Обратитесь к администратору!'])
-                  resolve();
+                  reject();
                 });
               } else {
                 setErrorMessages(errors);
-                resolve();
+                resovle();
               }
             }),
             onRowAdd: newData => new Promise(resolve => {
