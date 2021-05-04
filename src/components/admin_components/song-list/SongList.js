@@ -3,9 +3,13 @@ import {useFetch} from "../../../hooks";
 import MaterialTable from "material-table";
 import MaterialTableIcons from "../../page_parts/MaterialTableIcons";
 import SongListService from "../../../services/SongListService";
-import {Alert, Autocomplete} from "@material-ui/lab";
+import {Autocomplete} from "@material-ui/lab";
 import {TextField} from "@material-ui/core";
 import TitleWithBack from "../../page_parts/TitleWithBack";
+
+import MuiAlert from '@material-ui/lab/Alert';
+import Snackbar from '@material-ui/core/Snackbar';
+import SnackbarContent from '@material-ui/core/SnackbarContent';
 
 const MemberSelect = props => {
   const [loading, setLoading] = useState(true);
@@ -86,24 +90,46 @@ const columns = [
   { field: 'note', title: 'Заметки' },
 ];
 
+const Alert = props => {
+  return <MuiAlert elevation={6} variant="standard" {...props} />;
+}
+
 export default function SongList() {
   const [data, setData, loading] = useFetch("http://localhost:3000/api/song-list");
   const [errorMessages, setErrorMessages] = useState([]);
+  const [open, setOpen] = React.useState(false);
+
+  const showAlert = (errors) => {
+    setOpen(true);
+    setErrorMessages(errors);
+  };
 
   const validate = data => {
     const errors = [];
-    if (data.songs === undefined) errors.push('Выберите песни');
-    if (data.date === undefined) errors.push('Выберите дату');
+    if (!data.songs) errors.push('Выберите песни');
+    if (!data.date) errors.push('Выберите дату');
     return errors;
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
   };
 
   return (
     <div>
       <div>
         {errorMessages.length > 0 &&
-        <Alert severity="error" onClose={() => {}}>
-          {errorMessages.map((msg, i) => <div key={i}>{msg}</div>)}
-        </Alert>
+        <Snackbar open={open} autoHideDuration={4000} onClose={handleClose}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        >          
+           <Alert onClose={handleClose} severity="error">
+             {errorMessages.map((msg, i) => <div key={i}>{msg}</div>)} 
+           </Alert> 
+        </Snackbar>
         }
       </div>
       <div style={{ height: '300px', width: '100%', minWidth: '620px', maxWidth: '1200px' }}>
@@ -116,8 +142,9 @@ export default function SongList() {
           editable={{
             onRowUpdate: (newData, oldData) => new Promise((resolve, reject)=> {
               const errors = validate(newData);
+              console.log(errors);
               if (!errors.length) {
-                // setErrorMessages([]);
+                showAlert([]);
                 SongListService.update(oldData.id, newData).then(response => {
                   const dataUpdate = [...data];
                   const index = oldData.tableData.id;
@@ -125,29 +152,30 @@ export default function SongList() {
                   setData([...dataUpdate]);
                   resolve();
                 }).catch(() => {
-                  setErrorMessages(['Не удалось сохранить изменения. Обратитесь к администратору!'])
+                  console.log('erroe');
+                  showAlert(['Не удалось сохранить изменения. Обратитесь к администратору!'])
                   reject();
                 });
               } else {
-                setErrorMessages(errors);
+                showAlert(errors);
                 resovle();
               }
             }),
             onRowAdd: newData => new Promise(resolve => {
               const errors = validate(newData);
               if (!errors.length) {
-                // setErrorMessages([]);
+                showAlert([]);
                 SongListService.create(newData).then(response => {
                   const dataToAdd = [...data];
                   dataToAdd.push(response.data);
                   setData(dataToAdd);
                   resolve();
                 }).catch(() => {
-                  setErrorMessages(['Не удалось сохранить изменения. Обратитесь к администратору!']);
-                  resolve();
+                  showAlert(['Не удалось сохранить изменения. Обратитесь к администратору!']);
+                  reject();
                 });
               } else {
-                setErrorMessages(errors);
+                showAlert(errors);
                 resolve();
               }
             }),
@@ -159,8 +187,8 @@ export default function SongList() {
                 setData([...dataDelete]);
                 resolve();
               }).catch(error => {
-                setErrorMessages(['Не удалось удалить запись. Обратитесь к администратору!']);
-                resolve();
+                showAlert(['Не удалось удалить запись. Обратитесь к администратору!']);
+                reject();
               });
             }),
           }}
